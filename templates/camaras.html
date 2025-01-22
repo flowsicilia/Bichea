@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bichea</title>
+    <link rel="icon" href="{{ url_for('static', filename='images/icon.png') }}" type="image/x-icon">
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <!-- Leaflet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-dark bg-dark" aria-label="Barra de navegación offcanvas oscura">
+        <div class="container-fluid">
+            <a class="navbar-brand mx-auto p-2 d-flex justify-content-center" href="{{ url_for('home') }}">
+                <img src="static/images/bichea.png" id="bicheatitle" alt="Bichea logo" class="img-fluid" style="max-width: 250px; height: auto;">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbarDark" aria-controls="offcanvasNavbarDark" aria-label="Alternar navegación">
+                <span class="navbar-toggler-icon" id="menubichea"></span>
+            </button>
+            <div class="offcanvas offcanvas-end text-bg-dark" tabindex="-1" id="offcanvasNavbarDark" aria-labelledby="offcanvasNavbarDarkLabel">
+                <div class="offcanvas-header">
+                    <h5 class="offcanvas-title" id="offcanvasNavbarDarkLabel">Menú</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body">
+                    <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="{{ url_for('home') }}">Inicio</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('camaras') }}">Cámaras</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('matriculas') }}">Matrículas</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Línea divisoria -->
+    <div class="container my-3">
+        <div class="hrLinea"></div>
+    </div>
+
+    <!-- Mapa -->
+    <div class="container">
+        <div class="position-relative" id="map" style="width: 100%; height: 600px;"></div>
+        <!-- <div  class="position-absolute top-50 start-50 translate-middle" id="map"></div>-->
+    </div>
+
+        <script>
+            var map = L.map('map').setView([39.48, -0.38], 12.8); // Creación de mapa - .setView = Coordenadas inicio mapa y zoom //
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {minZoom:2, maxZoom: 19, attribution: '&copy; <a href="http://localhost:5000">Bichea</a>'}).addTo(map); // Copyright LeatfletJS //
+        
+            var cameraIcon = L.icon({
+                iconUrl: '../static/images/marker.png',
+                shadowUrl: '../static/images/marker.png',
+
+                iconSize: [40, 40],
+                shadowSize: [40, 40],
+                iconAnchor: [45, 45],
+                shadowAnchor: [38, 38],
+                popupAnchor: [0 , 0],
+            })
+
+            // Generacion de iconos camaras Valencia //
+            const cameras = [
+                {id: "14605.14604.14603.14602.14601", position: [39.490364, -0.364810], name:"C/ Duque de Mandas DIRECCION Av. Valladolid"},
+                {id: "14502.14501", position: [39.444175, -0.371438], name:"La Fe puerta principal"},
+                {id: "14401.14402.14403.14404", position: [39.441958, -0.388102], name:"SAN VICENTE MARTIR dirección V-30"},
+                {id: "14301.14302.14303.14304.14305.14306.14307.14308.14309", position: [39.463297, -0.411811], name:"P.I TRES FORQUES - ROS CASARES dirección P.I TRES FORQUES - ROS CASARES"},
+                {id: "14205.14201.14204.14203.14202", position: [39.467480, -0.325154], name:"Paseo Akuarela"},
+                {id: "14101.14103.14102", position: [39.481323, -0.351500], name:"Mirador Ronda Norte"},
+                {id: "14002.14003.14004.14001", position: [39.451254, -0.341141], name:"CAMINO VIEJO NAZARET dirección NORTE"},
+                {id: "13903.13904.13902.13901.13905", position: [39.449597, -0.335493], name:"IGNACIO ZULOAGA dirección CAMINO VIEJO DE LA PUNTA"},
+                {id: "13801.13802.13803.13804.13805", position: [39.452821, -0.334968], name: "Plza de las Moreras"},
+                {id: "13601.13602.13603.13604", position: [39.463229, -0.324919], name: "Animas Puerto"},
+                {id: "13501.13502.13503.13504", position: [39.462903, -0.329299], name: "Pl. de la Semana Sta. Marinera"},
+                {id: "13401.13402.13403", position: [39.459443, -0.332772], name: "Av. Ingeniero Manuel Soto - C. Juan Verdeguer"},
+                {id: "13301.13302.13303", position: [39.454937, -0.330150], name:"PUENTE DE ASTILLEROS dirección NAZARET / PUERTO VALENCIA"},
+                {id: "13201.13202.13203.13204.13205.13206.13207.13208", position: [39.447002, -0.366924], name:"P.I. FDO. ABRIL MARTORELL - ANTONIO FERRANDIS dirección AV.PROF. LOPEZ PIÑERO"},
+                {id: "13001.13002.13004.13005.13101.13102.13103.13105.13106", position: [39.498583, -0.381299], name:"Tunel Camino de Moncada - CAMINO DE MONCADA - POBLE NOU"},
+                {id: "12911.12912", position: [39.494708, -0.365599], name:"SANTIAGO RUSIÑOL dirección ALFAHUIR (Levante)"},
+                {id: "12901.12902.12903.12904.12905.12906.12907.12908.12909.12910", position: [39.498238, -0.370888], name:"TUNEL Ronda Nord DIRECCION Alboraya"},
+                {id: "12801.12802.12803.12804.12805.12806", position: [39.498086, -0.370393], name:"AV. Hermanos Machado DIRECCION AV. Constitucio"},
+                {id: "12701.12702.12703.12704.12705.12706", position: [39.494124, -0.357210], name:"ROTONDA Alboraya - Benimaclet"},
+                {id: "12601.12602.12603.12604.12605.12606.12607.12608", position: [39.5027628, -0.4274447], name: "Tunel Feria Valencia"},
+                {id: "12501.12502.12503.12504", position: [39.460024, -0.332861], name:"Av. Ingeniero Manuel Soto DIRECCION Av del Puerto"},
+                {id: "12401.12402.12403.12404", position: [39.487919, -0.352789], name:"Bulevar Periferico Norte"},
+                {id: "12301.12302.12303.12304.12305", position: [39.484668, -0.386055], name:"C del Padre Ferris DIRECCION C Joaquin Ballester"},
+                {id: "12201.12202.12203.12204.12205", position: [39.485677, -0.378588], name:"Av Constitucio DIRECCION C.Reus"},
+                {id: "12101.12102.12103.12104.12105", position: [39.446256, -0.368741], name:"Rotonda de Los Anzuelos"},
+                {id: "12001.12002.12003.12004.12005.12006", position: [39.445562, -0.380237], name:"Av. Fernando Abril Martorell DIRECCION Carr. de Malilla"},
+                {id: "11901.11902.11903.11904.11905", position: [39.487767, -0.405165], name:"Rotonda de Las Cañas"},
+                {id: "11801.11804.11803.11802", position: [39.492168, -0.408377], name: "Rotonda Beniferri"},
+                {id: "11701.11702.11703.11704.11705", position: [39.446438, -0.386379], name:"Av. del Doctor Tomas Salas CRUCE Calle San Vicente Martir"},
+                {id: "11601.11602.11603.11604.11605", position: [39.447253, -0.389846], name:"Av. del Doctor Tomas Salas ROTONDA San Marcelino"},
+                {id: "11501.11502.11503.11504.11505", position: [39.449778, -0.394869], name:"Av. Tres Cruces / Av. Gaspar Aguilar (Cementerio)"},
+                {id: "11401.11402.11403.11404", position: [39.480991, -0.407306], name:"Av. Pio Baroja ROTONDA Polica Local"},
+                {id: "11301.11302.11303.11304.11305", position: [39.483087, -0.401600], name:"ROTONDA Bertolin Campanar"},
+                {id: "11101.11102.11103.11201.11202.11203", position: [39.497514, -0.386149], name:"ROTONDA Entrada Ronda NORD desde CV-30"},
+                {id: "11001.11002.11003.11004", position: [39.490234, -0.382090], name:"DR. PESET ALEIXANDRE dirección GENERAL AVILÉS"},
+                {id: "10901.10902.10903.10904", position: [39.479862, -0.345161], name:"Av. Naranjos"},
+                {id: "10801.10802.10803.10804.10805.10806.10807.10808.10809.10810.10811.10812.10813.10814.10815.10816.10817.10818.10819.10820.10821.10822.10823", position: [39.454805, -0.354063], name:"Tunel CV-500 - El Saler"},
+                {id: "10701.10702.10703.10704.10705.10706.10707.10708.10709.10710.10711.10712", position: [39.488294, -0.390202], name:" Tunel P.I. GENERAL AVILÉS - DR. PESET ALEIXANDRE"},
+                {id: "10608.10609.10610.10611.10612", position: [39.471394, -0.372293], name:"C. del Pintor Sorolla"},
+                {id: "10601.10602.10603.10604.10605.10606.10607.", position: [39.472136, -0.369519], name:"- Plaza de Alfonso el Magnánimo - Plza de la Prta del Mar"},
+                {id: "10501.10502.10503.10504.10505.10506.10507.10508.10509.10510.10511.10512", position: [39.469366, -0.376626], name:"Plaza del Ayuntamiento"},
+                {id: "10401.10402.10403.10404.10405.10406.10407.10408.10409.10410.10411.10412.10413.10414", position: [39.463170, -0.378744], name:"P.I. RAMÓN Y CAJAL - GERMANÍAS"},
+                {id: "10301.10302.10303.10304.10305", position: [39.459576, -0.342429], name:"AV. BALEARES dirección JUAN VERDEGUER"},
+                {id: "10206.10207.10208.10209", position: [39.458098, -0.348264], name:"C/ Pintor Maella - C/ Luis Bolinches Compañ"},
+                {id: "10201.10202.10203.10204.10205", position: [39.456301, -0.347493], name:"Rotonda Aqua"},
+                {id: "10101.10102.10103.10104.10105", position: [39.468854, -0.361347], name:"Plaza de Zaragoza - Puente de Aragon"},
+                {id: "7001.7002.7003.7004.7005.7006.7007", position: [39.463582, -0.405880], name:"Av. Tres Forques - Av. Tres Cruces"},
+                {id: "7101.7102.7103.7104.7105.7106", position: [39.476472, -0.396810], name:"Tunel P.I. TIRSO DE MOLINA - MANUEL DE FALLA"},
+                {id: "7201.7202.7203.7204.7205.7206", position: [39.492007, -0.374212], name:"Tunel P.I. DR. PESET ALEIXANDRE - PRIMADO REIG"},
+                {id: "7301.7302.7303.7304.7305.7306", position: [39.494699, -0.402458], name:"Rotonda CIRSA"},
+                {id: "7401.7402.7403.7404.7405", position: [39.453266, -0.351880], name:"Rotonda EL SALER"},
+                {id: "7501.7502.7503.7504", position: [39.490259, -0.399307], name:"Rotonda Dama Iberica"},
+                {id: "7601.7602.7603.7604.7605.7701.7702.7703", position: [39.481756, -0.383992], name:"Tunel P.I. MAURO GUILLÉN - MENÉNDEZ PIDAL"},
+                {id: "7705", position: [39.482808, -0.381912], name:"Av. Burjassot"},
+                {id: "7704", position: [39.481906, -0.383999], name:"C/ del Padre Ferris"},
+                {id: "7801.7802.7803.7804.7805.7806.7807.7808.7809.7810", position: [39.480265, -0.383347], name:"Tunel P.I. PECHINA - BLANQUERÍAS"},
+                {id: "7901.7902.7903.7904.7905.7906.7907.7908.7909", position: [39.469678, -0.382451], name:"Tunel P.I. GUILLEM DE CASTRO - ÁNGEL GUIMERÁ"},
+                {id: "6001.6002.6003.6004.6005.6006.6007.6008.6009.6010.6011.6012.6013", position: [39.469826, -0.406270], name:"Tunel P.I AVENIDA DEL CID"},
+                {id: "6101.6102.6103.6104", position: [39.464177, -0.361404], name:"JACINTO BENAVENTE dirección PL. AMÉRICA"},
+                {id: "6201.6202.6203.6204.6205.6206.6207", position: [39.465712, -0.389176], name:"Tunel P.I. PEREZ GALDÓS dirección PUENTE DE CAMPANAR"},
+                {id: "6301.6302.6303.6304.6305.6306.6307.6308.6309.6310.6311.6312.6313.6314", position: [39.485151, -0.395575], name:"Tunel P.I. PÍO XII - CORTES VALENCIANAS dirección CV-35"},
+                {id: "6501.6502.6503.6504.6505.6506.6507.6508.6509.6510", position: [39.469153, -0.364169], name:"Puente de las Flores - Puente de Aragon"},
+                {id: "6601.6602", position: [39.460938, -0.414512], name:"V-30 dirección AV. CID"},
+                {id: "6701.6702.6703.6704", position: [39.478229, -0.406690], name:"Av. Pio Baroja - Calle Valle de la Ballestera"},
+                {id: "6801.6802.6803.6804.6805.6806.6807", position: [39.481382, -0.392948], name:"Av. Pio XII"},
+                {id: "6901.6902.6903.6904.6905", position: [39.478766, -0.398492], name:"Av. Maestro Rodrigo - C/ Valle de la Ballestera"},
+                {id: "5001.5002.5003.5004.5005", position: [39.485949, -0.396252], name:"Av. del General Aviles - Av. Pio XII"},
+                {id: "5101.5102.5103.5104", position: [39.479435, -0.356904], name:"PRIMADO REIG dirección AV. CATALUÑA"},
+                {id: "5201.5202.5203.5204", position: [39.466076, -0.335350], name:"SERRERÍA dirección AV. PUERTO"},
+                {id: "5301.5302.5303.5304", position: [39.470156, -0.334914], name:"Pl. de la Estacion del Cabañal"},
+                {id: "5501.5502.5503.5504.5505.5506", position: [39.461687, -0.338763], name:"C/ Ibiza - C/ Serreria"},
+                {id: "5601.5602.5603.5604.5605.5606.5607.5608", position: [39.456527, -0.390282], name:"Av. Gaspar Aguilar -  C/ Campos Crespo"},
+                {id: "5701.5702.5703.5704.5705.5706", position: [39.476429, -0.333356], name:"Av. de los Naranjos"},
+                {id: "5801", position: [39.483235, -0.325220], name:"C/ José Ballester Gozalvo"},
+                {id: "5901.5902.5903.5904.5905.5906.5907.5908.5909.5910.5911.5912.5913.5914.5915.5916.5917.5918.5919.5920.5921.5922.5923.5924", position: [39.482097, -0.350463], name:"Tunel P.I. AV. CATALUÑA - V-21"},
+                {id: "4001.4002.4003.4004.4005", position: [39.456474, -0.356073], name:"Puente de Monteolivete"},
+                {id: "4101.4102.4103.4104.4105", position: [39.456659, -0.363279], name:"Av. de la Plata"},
+                {id: "4201.4202.4203.4204.4205", position: [39.464076, -0.395852], name:"C/ del Archiduque Carlos"},
+                {id: "4301.4302.4303.4304.4305", position: [39.458139, -0.402388], name:"Av. Tres Cruces"},
+                {id: "4401.4402.4403.4404.4405", position: [39.474760, -0.405965], name:"Puente del Nueve de Octubre"},
+                {id: "4501.4502.4503.4504.4505", position: [39.454194, -0.361416], name:"Av. Amado Granell Mesado"},
+                {id: "4601.4602.4603", position: [39.495665, -0.400134], name:"C/ Miguel Ángel Blanco - C/ Dr. Nicasio Benlloch"},
+                {id: "4701.4702.4703.4704.4705", position: [39.491043, -0.378583], name:"Camino de Moncada - Av. Doctor Peset Aleixandre"},
+                {id: "4801.4802.4804.4803.4805", position: [39.469043, -0.419582], name:"Puente Av. del Cid - Xirivella"},
+                {id: "4901.4902.4903.4904.4905", position: [39.450116, -0.370989], name:"Av. Ausias March"},
+                {id: "3001.3002.3003.3004.3005.3006.3007.3008", position: [39.479366, -0.389352], name:"Tunel Av. de Menendez Pidal"},
+                {id: "3101.3102.3103.3104.3105", position: [39.476718, -0.367326], name:"Rotonda Fuente de las Cuatro Estaciones"},
+                {id: "3106.3107.3108.3109.3110", position: [39.473716, -0.364804], name:"Puenta de la Exposicion - C/ de Don Armando Palacio Valdes"},
+                {id: "3201.3202.3203.3204.3205.3206.3207", position: [39.471522, -0.354339], name:"Av. del Cardenal Benlloch"},
+                {id: "3301.3302.3303.3304.3305", position: [39.473940, -0.347775], name:"Av. Blasco Ibañez"},
+                {id: "3401.3402.3403.3404.3405", position: [39.470040, -0.349438], name:"C/ Santos Justo y Pastor"},
+                {id: "3501.3502.3503.3504.3505.3506.3507", position: [39.465415, -0.351312], name:"Av. del Puerto"},
+                {id: "3601.3602.3603.3604.3605", position: [39.462367, -0.352569], name:"Av. de Baleares - C/ Padre Tomas Montañana"},
+                {id: "3701.3702.3703.3704", position: [39.460113, -0.353479], name:"Plaza de Europa"},
+                {id: "3801.3802.3803.3804.3805", position: [39.463804, -0.358291], name:"P. de la Alameda - C/ de Eduardo Bosca"},
+                {id: "3901.3902.3903.3904", position: [39.458727, -0.357880], name:"C/ Alcalde Reig - Av. de la Plata"},
+                {id: "2901.2902.2903.2904.2905.2906.2907.2908", position: [39.481337, -0.380359], name:"C/ Conde de Trenor - Puente de las Artes"},
+                {id: "2801.2802.2803.2804.2805", position: [39.475899, -0.384129], name:"C/ Guillem de Castro (Torres Quart)"},
+                {id: "2701.2702.2703.2704.2705", position: [39.451286, -0.410920], name:"CV-36 - Camino Nuevo de Picaña"},
+                {id: "2601.2602.2603.2604.2605", position: [39.456970, -0.375915], name:"PASO ELEVADO DE PERIS Y VALERO dirección GIORGETA"},
+                {id: "2501.2502.2503.2504.2505.2506", position: [39.462582, -0.362531], name:"Av. de Peris i Valero - Av. del Reino de Valencia"},
+                {id: "2401.2402.2403.2404.2405", position: [39.481652, -0.351288], name:"Bulevar Periferico Nte. - Av. de los Naranjos (Torre Miramar)"},
+                {id: "2301.2302.2303.2304.2305.2306.2307.2308.2309.2310.2311", position: [39.476270, -0.355661], name:"Pl. del Cardenal Vicente Enrique i Tarancón"},
+                {id: "2201.2202.2203.2204.2205", position: [39.483797, -0.362766], name:"Av. Primado Reig dirección Av. Cataluña"},
+                {id: "2101.2102.2103.2104.2105", position: [39.492003, -0.373901], name:"Fuente pirámide Peset Aleixandre"},
+                {id: "2001.2002.2003.2004.2005.2006.2007", position: [39.488239, -0.389817], name:"Av. del General Aviles - Av. Burjassot"},
+                {id: "1901.1902.1903.1904.1905", position: [39.475059, -0.395736], name:"Puente de Campanar - Passeig de la Petxina"},
+                {id: "1801.1802.1803.1804.1805", position: [39.464374, -0.388055], name:"Av. de Perez Galdos"},
+                {id: "1701.1702.1703.1704.1705.1706", position: [39.469690, -0.405307], name:"Av. del Cid - C/ del Nuevo de Octubre"},
+                {id: "1601.1602.1603.1604.1605", position: [39.467390, -0.392566], name:"Av. del Cid - C/ Lorca"},
+                {id: "1501.1502.1503.1504.1505", position: [39.475381, -0.352457], name:"C/ del Clariano - Av. del Cardenal Benlloch"},
+                {id: "1401.1402.1403.1404.1405.1406.1407", position: [39.468933, -0.360728], name:"Plaza de Zaragoza - Paseo de la Alameda"},
+                {id: "1301.1302.1303.1304.1305.1306.1307.1308.1309.1310.1311", position: [39.474588, -0.397707], name:"Tunel P.I. PECHINA dirección GUILLEM DE CASTRO"},
+                {id: "1201.1202.1203.1204.1205", position: [39.462515, -0.386701], name:"C/ de Jesus - Av. de Giorgeta"},
+                {id: "1101.1102.1103.1104.1105", position: [39.457778, -0.383486], name:"Av. de Giorgeta - C/ San Vicente Martir"},
+                {id: "1001.1002.1003.1004.1005", position: [39.477549, -0.390163], name:"Puente de Ademuz - Gran via de Ferran el Catolic"},
+                {id: "901.902.903.904.905.906.907.908.909", position: [39.470411, -0.385389], name:"Gran via de Ferran el Catolic - C/ de Angel Guimera"},
+                {id: "801.802.803.804.805.806.807.808", position: [39.478969, -0.374808], name:"CONDE DE TRENOR - TORRES DE SERRANOS"},
+                {id: "707.706.701.702.703.704.705", position: [39.469097, -0.372122], name:"C/ Colon"},
+                {id: "611.612", position: [39.472949, -0.379767], name:"Avda. del Oeste"},
+                {id: "610", position: [39.467336, -0.376561], name:"C/ Jativa DIRECCION C/ Alicante"},
+                {id: "601.602.603.604.606.607.608", position: [39.468129, -0.379922], name:"Guillem de Castro - San Vicente Martir D. Angel Guimerá"},
+                {id: "501.502.503.504.505.506.507", position: [39.465786, -0.381480], name:"Plaza España"},
+                {id: "401.402.403.404.405", position: [39.481334, -0.374692], name: "GUADALAVIAR direccion Llano de la Zaidia"},
+                {id: "301.302.303.304.305.306", position: [39.467021, -0.356356], name:"AV.PUERTO DR.Manuel Candela"},
+                {id: "201.202.203.204", position: [39.475023, -0.388574], name:"Gran via de Ferran el Catolic - C/ Quart"},
+            ]
+
+            // PopUp al hacer click en cualquier icono de camara -- L.Marker({icon: myIcon})........ Para añadir icono //
+            const cameraBaseUrl = "{{ url_for('cam_viewer', ids='') }}";
+
+            cameras.forEach(camera => {
+                let newCamera = new L.Marker({icon: cameraIcon}).setLatLng(camera.position).addTo(map)
+                .on('click', () => {
+                    new L.popup({closeOnClick: true, offset: L.point(0, -30)})
+                    .setLatLng(camera.position)
+                    .setContent(`<h3 id="namepopup">${camera.name}</h3>
+                    <br> 
+                    <button id="btpopup" class="modern-button container text-center" onclick="window.location.href='${cameraBaseUrl}${camera.id}'"><strong>Reproducir</strong></button>`)
+                    .addTo(map);
+                })
+            })
+        </script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    
+    <style>
+         @media (max-width: 767px) {
+        #map {
+            height: 300px; /* Reduce la altura del mapa en pantallas pequeñas */
+        }
+    }
+    </style>
+    
+    <!-- Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+</html>

@@ -1,0 +1,150 @@
+body {
+    background-color: #151312;
+    color: #8f8f8f;
+}
+
+/* Personalización del logo */
+#bicheatitle {
+    background-color: transparent; /* Elimina cualquier fondo en la imagen */
+    margin: 0; /* Elimina el margen de la imagen */
+    padding: 0; /* Elimina el relleno de la imagen */
+    display: block;
+    width: 100%; /* Ajusta el tamaño si es necesario */
+    height: auto;
+    border: none;
+}
+/* Asegura un fondo oscuro para la barra de navegación */
+.navbar-dark {
+    background-color: #151312; /* Color oscuro o el color que prefieras */
+}
+
+/* Fondo de offcanvas si es necesario */
+.offcanvas {
+    background-color: #000000; /* Color oscuro para el offcanvas */
+}
+/* Si la imagen está en un contenedor, asegúrate de que también sea transparente */
+.container-fluid {
+    background-color: #151312;
+    padding: 0; /* Elimina el relleno */
+    margin: 0; /* Elimina márgenes */
+}
+
+nav {
+    margin: 0;
+    padding: 0;
+    background-color: transparent; /* Si el nav tiene otro color */
+}
+
+.navbar {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+.navbar-toggler {
+    color: #8f8f8f;
+    position: absolute;
+    right: 25px; /* Ajusta la distancia desde la izquierda */
+    top: 50%;   /* Centra verticalmente en la barra */
+    transform: translateY(-50%);
+}
+.navbar-toggler:hover{
+    color: #727272; /* Color de fondo al pasar el mouse */
+}
+
+/* Línea divisoria */
+.hrLinea {
+    border-top: 2px solid #8f8f8f;
+    margin-bottom: 25px;
+    width: 100%;
+}
+
+/* Carousel */ 
+
+.carousel {
+    position: relative; /* Permite posicionar los controles */
+    overflow: hidden; /* Asegura que no se vea contenido desbordado */
+    height: 400px; /* Define una altura fija para el carrusel */
+}
+
+.carousel-inner {
+    height: 100%; /* Asegura que el contenedor interno ocupe el 100% de la altura */
+
+}
+
+.carousel-item {
+    height: 100%; /* Cada item ocupa el 100% de la altura del carrusel */
+}
+
+.carousel-item img {
+    width: 100%; /* La imagen ocupa todo el ancho */
+    height: 100%; /* La imagen ocupa toda la altura */
+    object-fit: cover; /* Cubre el área manteniendo la proporción */
+}
+
+.carousel-control-prev,
+.carousel-control-next {
+    margin-top: 0; /* Ajusta el margen superior si es necesario */
+    margin-left: -50px; /* Ajusta el margen izquierdo para el anterior */
+    margin-right: -50px; /* Ajusta el margen derecho para el siguiente */
+}
+
+
+
+
+/* ------------------------ */
+
+#map {  
+        width: 750px;
+        height: 750px; 
+        margin: 50px 0;
+        margin-top: 4%;
+        margin-bottom: 50px;
+        border: solid #8f8f8f;
+        border-radius: 2%;
+    }
+.leaflet-layer,
+.leaflet-control-zoom-in,
+.leaflet-control-zoom-out,
+.leaflet-control-attribution {
+  filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
+    }
+
+/* Hacer el fondo del popup transparente */
+.leaflet-container .leaflet-popup-content-wrapper {
+    background-color: #31313180; /* Fondo totalmente transparente */
+    border: 2px solid #000000; /* Cambia el color del borde aquí */
+    border-radius: 10px; /* Esquinas redondeadas */
+    padding: 10px; /* Espacio dentro del popup */
+}
+
+/* Hacer el fondo del triángulo (la punta) transparente */
+.leaflet-container .leaflet-popup-tip {
+    background: #000000;
+}
+
+.leaflet-popup-content {
+    color: #ffffff; /* Cambia el color del texto */
+    font-size: 16px; /* Tamaño del texto */
+    font-family: Arial, sans-serif; /* Tipo de letra */
+}
+.modern-button {
+    background-color: #6e6e6e; /* Color de fondo */
+    color: #ffffff; /* Color del texto */
+    border: none; /* Sin borde */
+    border-radius: 5px; /* Bordes redondeados */
+    padding: 7px 15px; /* Espaciado interno */
+    font-size: 14px; /* Tamaño de fuente */
+    cursor: pointer; /* Cursor en forma de mano */
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Transiciones suaves */
+}
+
+.modern-button:hover {
+    background-color: #19335a; /* Color de fondo al pasar el mouse */
+    transform: scale(1.05); /* Aumentar tamaño ligeramente */
+    
+}
+
+.modern-button:active {
+    transform: scale(0.95); /* Reducir tamaño al hacer clic */
+}
+
+/* ------------------------ */
