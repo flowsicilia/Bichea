@@ -3,6 +3,10 @@ body {
     color: #8f8f8f;
 }
 
+/* Login */ 
+
+
+
 /* Personalización del logo */
 #bicheatitle {
     background-color: transparent; /* Elimina cualquier fondo en la imagen */
@@ -138,7 +142,7 @@ nav {
 }
 
 .modern-button:hover {
-    background-color: #19335a; /* Color de fondo al pasar el mouse */
+    background-color: #4e4e4e; /* Color de fondo al pasar el mouse */
     transform: scale(1.05); /* Aumentar tamaño ligeramente */
     
 }
