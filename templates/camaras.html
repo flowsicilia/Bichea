@@ -62,16 +62,12 @@
             var map = L.map('map').setView([39.48, -0.38], 12.8); // Creación de mapa - .setView = Coordenadas inicio mapa y zoom //
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {minZoom:2, maxZoom: 19, attribution: '&copy; <a href="http://localhost:5000">Bichea</a>'}).addTo(map); // Copyright LeatfletJS //
         
-            var cameraIcon = L.icon({
-                iconUrl: '../static/images/marker.png',
-                shadowUrl: '../static/images/marker.png',
-
-                iconSize: [40, 40],
-                shadowSize: [40, 40],
-                iconAnchor: [45, 45],
-                shadowAnchor: [38, 38],
-                popupAnchor: [0 , 0],
-            })
+            var customIcon = L.icon({
+                iconUrl: "{{ url_for('static', filename='images/iconMap.png') }}", // Ruta de la imagen del icono
+                iconSize: [32, 32], // Tamaño del icono [ancho, alto]
+                iconAnchor: [16, 32], // Punto de anclaje del icono (dónde se coloca en el mapa)
+                popupAnchor: [0, -32]  // Punto de anclaje del popup (si lo tiene)
+            });
 
             // Generacion de iconos camaras Valencia //
             const cameras = [
@@ -124,7 +120,7 @@
                 {id: "7001.7002.7003.7004.7005.7006.7007", position: [39.463582, -0.405880], name:"Av. Tres Forques - Av. Tres Cruces"},
                 {id: "7101.7102.7103.7104.7105.7106", position: [39.476472, -0.396810], name:"Tunel P.I. TIRSO DE MOLINA - MANUEL DE FALLA"},
                 {id: "7201.7202.7203.7204.7205.7206", position: [39.492007, -0.374212], name:"Tunel P.I. DR. PESET ALEIXANDRE - PRIMADO REIG"},
-                {id: "7301.7302.7303.7304.7305.7306", position: [39.494699, -0.402458], name:"Rotonda CIRSA"},
+                {id: "7301.7302.7303.7304.7305.7306.7307", position: [39.494699, -0.402458], name:"Rotonda CIRSA"},
                 {id: "7401.7402.7403.7404.7405", position: [39.453266, -0.351880], name:"Rotonda EL SALER"},
                 {id: "7501.7502.7503.7504", position: [39.490259, -0.399307], name:"Rotonda Dama Iberica"},
                 {id: "7601.7602.7603.7604.7605.7701.7702.7703", position: [39.481756, -0.383992], name:"Tunel P.I. MAURO GUILLÉN - MENÉNDEZ PIDAL"},
@@ -207,7 +203,7 @@
             const cameraBaseUrl = "{{ url_for('cam_viewer', ids='') }}";
 
             cameras.forEach(camera => {
-                let newCamera = new L.Marker({icon: cameraIcon}).setLatLng(camera.position).addTo(map)
+                let newCamera = L.marker(camera.position, {icon: customIcon}).addTo(map)
                 .on('click', () => {
                     new L.popup({closeOnClick: true, offset: L.point(0, -30)})
                     .setLatLng(camera.position)

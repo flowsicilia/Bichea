@@ -48,27 +48,41 @@
         <div class="hrLinea"></div>
     </div>
 
-    <div class="container">
-        <form>
-            <div class="mb-3">
-                <label for="matracaInput" class="form-label">Introduce la matrícula:</label>
-                <input type="text" class="form-control" id="matracaInput" placeholder="1234BBB">
-            </div>
-        </form>
-    </div>    
+    <h2>Información de Matrículas</h2>
+    <form id="matriculaForm">
+        <input type="text" id="matriculaInput" name="matricula" placeholder="Ingrese la matrícula">
+        <button type="submit">Buscar</button>
+    </form>
+    <div id="resultado"></div>
 
-    <!-- Línea divisoria -->
-    <script> 
-    document.getElementById("matracaInput").addEventListener("focus", function() {
-        this.placeholder = "";  // Borra el placeholder al hacer clic
-    });
+    <script>
+        document.getElementById("matriculaForm").addEventListener("submit", async function (event) {
+            event.preventDefault();  // Evita que el formulario recargue la página
+            const matricula = document.getElementById("matricula").value;
 
-    document.getElementById("matracaInput").addEventListener("blur", function() {
-        if (this.value === "") {  // Si el campo está vacío, vuelve a mostrar el placeholder
-         this.placeholder = "1234BBB";
-        }
-    });
+            if (!matricula) {
+                alert("Ingrese una matrícula antes de buscar.");
+                return;
+            }
+
+            try {
+                const response = await fetch("/scrapear", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ matricula })
+                });
+
+                const data = await response.json();
+                console.log("✅ Respuesta del servidor:", data);
+
+                document.getElementById("resultado").innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+            } catch (error) {
+                console.error("❌ Error en la solicitud:", error);
+                document.getElementById("resultado").innerHTML = "<p>Error en la búsqueda</p>";
+            }
+        });
     </script>
+    
 
     <!-- Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

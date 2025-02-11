@@ -67,6 +67,7 @@ nav {
     position: relative; /* Permite posicionar los controles */
     overflow: hidden; /* Asegura que no se vea contenido desbordado */
     height: 400px; /* Define una altura fija para el carrusel */
+    padding-top: 20px;
 }
 
 .carousel-inner {
@@ -79,7 +80,7 @@ nav {
 }
 
 .carousel-item img {
-    width: 100%; /* La imagen ocupa todo el ancho */
+    width: 75%; /* La imagen ocupa todo el ancho */
     height: 100%; /* La imagen ocupa toda la altura */
     object-fit: cover; /* Cubre el área manteniendo la proporción */
 }
@@ -87,8 +88,8 @@ nav {
 .carousel-control-prev,
 .carousel-control-next {
     margin-top: 0; /* Ajusta el margen superior si es necesario */
-    margin-left: -50px; /* Ajusta el margen izquierdo para el anterior */
-    margin-right: -50px; /* Ajusta el margen derecho para el siguiente */
+    margin-left: 0px; /* Ajusta el margen izquierdo para el anterior */
+    margin-right: 0px; /* Ajusta el margen derecho para el siguiente */
 }
 
 
