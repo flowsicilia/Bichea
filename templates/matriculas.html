@@ -56,30 +56,39 @@
     <div id="resultado"></div>
 
     <script>
-        document.getElementById("matriculaForm").addEventListener("submit", async function (event) {
-            event.preventDefault();  // Evita que el formulario recargue la página
-            const matricula = document.getElementById("matricula").value;
-
-            if (!matricula) {
-                alert("Ingrese una matrícula antes de buscar.");
-                return;
-            }
-
-            try {
-                const response = await fetch("/scrapear", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ matricula })
-                });
-
-                const data = await response.json();
-                console.log("✅ Respuesta del servidor:", data);
-
-                document.getElementById("resultado").innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
-            } catch (error) {
-                console.error("❌ Error en la solicitud:", error);
-                document.getElementById("resultado").innerHTML = "<p>Error en la búsqueda</p>";
-            }
+        document.addEventListener("DOMContentLoaded", function () {
+            document.getElementById("matriculaForm").addEventListener("submit", async function (event) {
+                event.preventDefault();  // Evita que la página se recargue
+                const input = document.getElementById("matriculaInput");
+    
+                if (!input) {
+                    console.error("❌ No se encontró el input de matrícula.");
+                    return;
+                }
+    
+                const matricula = input.value;
+    
+                if (!matricula) {
+                    alert("Ingrese una matrícula antes de buscar.");
+                    return;
+                }
+    
+                try {
+                    const response = await fetch("/scrapear", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ matricula })
+                    });
+    
+                    const data = await response.json();
+                    console.log("✅ Respuesta del servidor:", data);
+    
+                    document.getElementById("resultado").innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+                } catch (error) {
+                    console.error("❌ Error en la solicitud:", error);
+                    document.getElementById("resultado").innerHTML = "<p>Error en la búsqueda</p>";
+                }
+            });
         });
     </script>
     
