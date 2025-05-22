@@ -32,7 +32,7 @@ def matriculas():
 # Función asincrónica usando Playwright
 async def perform_lookup(badge):
     async with async_playwright() as p:
-        browser = await p.firefox.launch(headless=True)
+        browser = await p.firefox.launch(headless=False)
         context = await browser.new_context()
         page = await context.new_page()
 
@@ -45,7 +45,7 @@ async def perform_lookup(badge):
 
         headers = {
             'Host': 'auto-info.gratis',
-            'User-Agent': 'Mozilla/5.0',
+            'User-Agent': 'Mozilla/5.0 (Linux; Android 11; SAMSUNG SM-G973U) AppleWebKit/537.36 (KHTML, like Gecko) SamsungBrowser/14.2 Chrome/87.0.4280.141 Mobile Safari/537.36',
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
             'Accept-Language': 'es-ES,es;q=0.8',
             'Content-Type': 'application/x-www-form-urlencoded',
@@ -62,10 +62,27 @@ async def perform_lookup(badge):
         await asyncio.sleep(1)
         await page.evaluate(js_script2)
 
+        # Manejo del iframe y click en el reCAPTCHA checkbox
+        try:
+            await page.frame_locator("iframe[src*='recaptcha']").locator("#recaptcha-anchor").click()
+            print("✅ Click en reCAPTCHA checkbox hecho")
+        except Exception as e:
+            print("❌ Error al hacer click en el reCAPTCHA:", e)
+
+        await asyncio.sleep(15)  # Esperar que se resuelva el captcha manualmente
+
+        # Click en el botón final si el captcha fue resuelto
+        try:
+            await page.locator('.btn').click()
+            print("✅ Click en botón realizado")
+        except:
+            print("⚠️ No se encontró el botón o el captcha no se resolvió")
+
         await asyncio.sleep(5)
-        result_url = page.url  # Esta es la URL final que se va a devolver
+        result_url = page.url
         await browser.close()
         return result_url
+
 
 @app.route("/searchbadge", methods=["POST"])
 def searchbadge():

@@ -1,4 +1,0 @@
-pip install Flask
-pip install requests
-pip install flask-cors
-pip install urllib3
