@@ -15,7 +15,7 @@
 
 <body>
 
-    <!-- Navbar -->
+<!-- Navbar -->
     <nav class="navbar navbar-dark bg-dark" aria-label="Barra de navegación offcanvas oscura">
         <div class="container-fluid">
             <a class="navbar-brand mx-auto p-2 d-flex justify-content-center" href="{{ url_for('home') }}">
@@ -39,12 +39,16 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url_for('matriculas') }}">Matrículas</a>
+                            <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('logout') }}">Cerrar sesión</a>
+                        </li>
                         </li>
                     </ul>
                 </div>
             </div>
         </div>
     </nav>
+
 
     <!-- Línea divisoria -->
     <div class="container my-3">

@@ -79,14 +79,14 @@
         <img src="static/images/bichea.png" id="bicheatitle" alt="Bichea logo" class="img-fluid">
 
         <!-- Formulario -->
-        <form id="formLogin" class="p-4 shadow rounded">
+        <form id="formLogin" class="p-4 shadow rounded" action="/login" method="POST">
             <div class="form-floating mb-3">
-                <input type="text" class="form-control" id="floatingInput" placeholder="name@example.com">
-                <label for="floatingInput">User ID</label>
+                <input type="text" class="form-control" name="username" placeholder="Usuario" required>
+                <label for="username">User ID</label>
             </div>
             <div class="form-floating mb-3">
-                <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
-                <label for="floatingPassword">Password</label>
+                <input type="password" class="form-control" name="password" placeholder="Password" required>
+                <label for="password">Password</label>
             </div>
             <button id="buttonLogin" class="btn fw-bold" type="submit">Iniciar sesión</button>
         </form>
