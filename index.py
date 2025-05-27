@@ -14,6 +14,9 @@ CORS(app)
 app.config['SECRET_KEY'] = 'bicheatest1234'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///bichea.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config["SESSION_TYPE"] = "filesystem"
+app.config["SESSION_PERMANENT"] = False  # Para sesiones no permanentes
+app.config["SESSION_TIME_OUT"] = 3600 #En segundos
 
 
 db = SQLAlchemy(app)
@@ -29,11 +32,15 @@ class User(UserMixin, db.Model):
         self.password_hash = generate_password_hash(password)
 
 login_manager = LoginManager(app)
-login_manager.login_view = 'login'
+login_manager.login_view = '/'
 
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
+
+@app.route('/')
+def index():
+    return redirect(url_for('login'))
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
