@@ -107,20 +107,26 @@ async def perform_lookup(badge):
             print(f'❌ERROR al seleccionar matricula o pais: {e}')
 
         try: 
-            await page.wait_for_url("**/sprawdzam/**") # Esperar a que la pagina redirija a la URL
+            await page.wait_for_url("https://auto-info.gratis/es/sprawdzam/") # Esperar a que la pagina redirija a la URL
             await asyncio.sleep(2)
-            await page.get_by_text('Consentir', exact=True).click()
-            await asyncio.sleep(5)
+
+            try:
+                consent_button = await page.get_by_text('Consentir', exact=True).click()
+                if consent_button.is_visible():
+                        consent_button.click()
+                        page.wait_for_timeout(1000)
+            except:
+                print("No apareció popup de consentimiento.")    
+
             
              # Esperar a que el iframe del reCAPTCHA esté presente
             iframe_element = page.frame_locator("iframe[title='reCAPTCHA']")
-
             # Acceder al frame
             frame = await page.frame_locator("iframe[title='reCAPTCHA']").locator(".recaptcha-checkbox-border").click()
 
             if frame:
                 # Hacer clic en el checkbox 
-                await frame.click(".recaptcha-checkbox-border")
+                await frame.click(".recaptcha-checkbox-checkbox")
                 print("✅ Checkbox del reCAPTCHA clickeado")
             else:
                 print("❌ No se pudo acceder al iframe del reCAPTCHA")
